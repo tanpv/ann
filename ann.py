@@ -15,10 +15,12 @@ class ANN():
 
 	def __init__(self, size):
 		'''
-			size is a list define ann structure
+			- size is a list define ann structure
+			- init the weight and bias
 		'''
-		print(size)
-		pass
+		self.num_layers = len(size)
+		
+
 
 	def feed_foward(self):
 		pass
@@ -46,24 +48,39 @@ class ANN():
 
 
 
-class DataLoader():
+def load_iris_data():
 	'''
 		- load data from csv file
 		- build input array and output array
 	'''
-	def __init__(self, data_file):
-		iris = np.loadtxt(data_file, delimiter=",", skiprows=1)
-		# second = csv[:,1]
-		# third = csv[:,2]
-		print(iris)
+	iris_frame = pd.read_csv('iris.csv')
+
+	# convert species from text to number
+	iris_frame.loc[iris_frame['species']=='setosa', 'species'] = 0
+	iris_frame.loc[iris_frame['species']=='versicolor', 'species'] = 1
+	iris_frame.loc[iris_frame['species']=='virginica', 'species'] = 2
+
+	iris_input = [np.reshape(i, (4,1)) for i in iris_frame[['sepal_length','sepal_width','petal_length','petal_width']].values]
+	iris_output = [vectorized_result(o) for o in iris_frame['species'].values]
+	
+	print(iris_output)
+	print(iris_input)
+
+	# first return only one training data point
+	return zip(iris_input[:1], iris_output[:1])
+
+def vectorized_result(j):
+	e = np.zeros((3,1))
+	e[j] = 1
+	return e
 
 
+print(list(load_iris_data()))
 
-data_file = 'iris.csv'
-dl = DataLoader(data_file)
-
-
-# size = [2,3,1]
+# 4 neuron input
+# 3 neuron output
+# 5 neuron hiden layer
+size = [4,3,3]
 # n = ANN(size)
 
 
