@@ -13,16 +13,60 @@ import pandas as pd
 
 class ANN():
 
-	def __init__(self, size):
+	def __init__(self, network_structure):
 		'''
-			- size is a list define ann structure
-			- init the weight and bias
+			- network_structure define in detail number of layer and number of neuron at each layer
 		'''
-		self.num_layers = len(size)
+		self.init_weight_and_bias(network_structure)
 		
 
+	def init_weight_and_bias(self, network_structure):
+		self.num_layers = len(network_structure)
+		self.biases = []
+		self.weights = []
 
-	def feed_foward(self):
+		# init biases
+		# input layer do not have bias
+		# bias is a matrix with 
+		# (row, column) = (number_neuron_in_layer, 1)
+		for num_neuron in network_structure[1:]:
+			bias = np.random.randn(num_neuron, 1)
+			print(bias)
+			self.biases.append(bias)
+
+		print('bias')
+		print(self.biases)
+
+		# init weights
+		# input layer do not have weight
+		# weight is a matrix with 
+		# (row, column) = (number_neuron_in_current_layer, number_neuron_in_previous_layer)
+		for num_neuron, num_neuron_previous in zip(network_structure[1:], network_structure[:-1]):
+			weight = np.random.randn(num_neuron, num_neuron_previous)
+			print(weight)
+			self.weights.append(weight)
+
+		print('weight')
+		print(self.weights)
+
+
+	def feed_foward(self, network_structure):
+		'''
+			- calculate z at each neuron
+			- calculate activation at each neuron
+		'''
+		self.zs = []
+		self.activations = []
+
+		# calculate z at each neuron
+		# z = w dot a
+		# activation = activation_function(z)
+
+
+	def cost_calculate(self):
+		'''
+			- calculate cost at end of feed forward
+		'''
 		pass
 
 	def delta_calculate(self):
@@ -75,13 +119,14 @@ def vectorized_result(j):
 	return e
 
 
-print(list(load_iris_data()))
+# print(list(load_iris_data()))
 
 # 4 neuron input
 # 3 neuron output
 # 5 neuron hiden layer
-size = [4,3,3]
-# n = ANN(size)
+network_structure = [4,6,3]
+n = ANN(network_structure)
+
 
 
 
