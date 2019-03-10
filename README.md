@@ -1,8 +1,45 @@
+Done
+	- explain in detail how ann work
+		- gradient descent on one and 2 variables
+		- ann structure
+		- feed forward
+		- back propagate delta
+		- gradient of cost respect to weight and bias
+		- update weight and bias
+
+	- build from scratch a ann with numpy
+		- loading data in to numpy array
+		- ann in matrix form
+		- coding each above steps
+
+	- working with iris dataset
+		- understand dataset
+		- load dataset
+
+	- working with mnist dataset
+		- understand dataset
+		- load dataset
+
+	- short cut for jupyter notebook
+
+	- fastai lib
+		- 
+
+
+
+	
+
+
+
+
+
+
+
+<!-- ---------------------------------------------------------------------------------- -->
+
 - deep learning from scratch
 - practical deep learning with fastai
 - practical deep learning with pytorch
-
-
 
 
 
