@@ -1,9 +1,14 @@
 '''
+	- data sample
 	- weight
 	- feed forward
+		- find output correspond to input at current value of weight
 	- mean square error
 	- training
 	- learning rate
+		- too big with value 1
+		- too small with value 0.01
+		- normal learning rate at 0.1
 	- epoch
 '''
 
@@ -37,7 +42,7 @@ class Neuron(object):
 	def train(self):
 		self.errors = []
 		for n in range(self.epoch):
-			print('error at time {0}'.format(n), self.mean_square_error())
+			print('error at epoch {0}'.format(n), self.mean_square_error())
 			self.errors.append(self.mean_square_error())
 			self.w = self.w - self.learning_rate*self.gradient(self.w)
 			print('updated weight {0}', self.w)
@@ -45,18 +50,23 @@ class Neuron(object):
 
 		self.plot_train_error()
 
-	def plot_train_error(self):
+	def plot_train_error(self):		
+		plt.xticks(np.arange(0, self.epoch, 1))
 		plt.plot(range(self.epoch), self.errors)
 		plt.show()
 
 
 train_data = [(1,2)]
+
+learning_rate = 0.01
+
 learning_rate = 0.1
+
 epoch = 20
 
 n = Neuron(	train_data,
 			learning_rate,
-			epoch)
+			epoch )
 n.train()
 
 
