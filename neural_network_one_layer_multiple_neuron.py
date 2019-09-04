@@ -124,6 +124,7 @@ learning_rate = 0.1
 
 epoch = 100
 
+# input, middle layer, output
 network_structure = [2]
 
 n = Neuron(	input,
