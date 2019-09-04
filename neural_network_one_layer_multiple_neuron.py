@@ -20,7 +20,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-class Neuron(object):
+class ANN(object):
 	def __init__(self, 
 				input,
 				output,
@@ -123,6 +123,8 @@ output = 0.89
 learning_rate = 0.1
 
 epoch = 100
+
+network_structure = [2]
 
 n = Neuron(	input,
 			output,
