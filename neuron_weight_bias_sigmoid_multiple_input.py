@@ -8,11 +8,12 @@
 	- mean square error
 		- plot 3d for error
 		- https://towardsdatascience.com/an-easy-introduction-to-3d-plotting-with-matplotlib-801561999725
-	- training
+	- train
 	- learning rate
 		- too big with value 1
 		- too small with value 0.01
 		- normal learning rate at 0.1
+	- batch size
 	- epoch
 '''
 
@@ -35,7 +36,8 @@ class Neuron(object):
 		self.init_bias()
 
 	def init_weight(self):
-		self.weight = np.random.randn()
+		# number of weight equal with number if input
+		self.weight = [np.random.randn() for i in range(len(self.input))]
 		print('weight', self.weight)
 
 	def init_bias(self):
@@ -43,6 +45,10 @@ class Neuron(object):
 		print('bias', self.bias)
 
 	def feed_forward(self, input):
+		sum = 0
+		for i in range(len(self.input)):
+			
+
 		return self.sigmoid(input*self.weight + self.bias)
 
 	def z(self, input, weight, bias):
@@ -59,15 +65,15 @@ class Neuron(object):
 	def loss(self):
 		# caculate loss with mean square error
 		# mse = square(expected_output - real_output)
-		return np.square( self.feed_forward(self.input[0]) - self.output[0])
+		return np.square( self.feed_forward(self.input[0]) - self.output)
 
 	def loss_derivative_respect_to_weight(self, weight, bias):
 		z = self.input[0] * weight + bias
-		return 2*(self.sigmoid(z)-self.output[0])*self.sigmoid(z)*(1-self.sigmoid(z))*self.input[0]
+		return 2*(self.sigmoid(z)-self.output)*self.sigmoid(z)*(1-self.sigmoid(z))*self.input[0]
 
 	def loss_derivative_respect_to_bias(self, weight, bias):
 		z = self.input[0] * weight + bias
-		return 2*(self.sigmoid(z)-self.output[0])*self.sigmoid(z)*(1-self.sigmoid(z))
+		return 2*(self.sigmoid(z)-self.output)*self.sigmoid(z)*(1-self.sigmoid(z))
 
 	def train(self):
 		self.losses = []
@@ -94,10 +100,14 @@ class Neuron(object):
 		plt.show()
 
 
+
+input = [3, 5, 7, 11, 1]
+
 # note that output of sigmoid function is between (0,1)
-input = [3]
-output = [0.3]
+output = 0.3
+
 learning_rate = 0.2
+
 epoch = 50
 
 n = Neuron(	input,
@@ -105,6 +115,6 @@ n = Neuron(	input,
 			learning_rate,
 			epoch )
 
-n.train()
+# n.train()
 
 

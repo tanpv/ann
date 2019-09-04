@@ -75,8 +75,8 @@ class Neuron(object):
 		plt.show()
 
 
-input = [1]
-output = [2]
+input = [3]
+output = [5]
 
 learning_rate = 0.01
 
