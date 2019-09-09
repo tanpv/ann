@@ -16,8 +16,7 @@
 		- batch
 
 - neural network
-	- one layer
-	- multiple layer
+	- most simple form is 222
 
 - projects
 	- iris
@@ -32,10 +31,13 @@ road map
 		- rnn
 		- qnn
 
-
 	tools
 		- keras
 		- tensorflow 2.0
 		- pytorch 1.0
 		- sonnet
+
+	project
+		-
+		- 
 -----------------------------
