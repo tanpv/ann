@@ -70,8 +70,18 @@ class NeuralNetwork():
 		print('\n')
 
 
-	def sigmoid(self, z):
+	def activation(self, z):
+		'''
+			use sigmoid activation function
+		'''
 		return 1 / (1 + np.exp(-z))
+
+
+	def z(self):
+		'''
+			sum(i*w) + b
+		'''
+		pass
 
 
 	def loss(self):
@@ -82,7 +92,7 @@ class NeuralNetwork():
 
 
 	def mse(self):
-		mse = np.mean(np.square(self.feed_forward()-self.output))
+		mse = np.mean(np.square(self.feed_forward()-self.output))/2
 		return mse
 
 

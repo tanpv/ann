@@ -16,7 +16,20 @@
 		- batch
 
 - neural network
-	- most simple form is 222
+	- define 222 structure
+
+	- feed forward
+		- init weight
+		- init bias
+		- calculate hiden z
+		- calculate hiden a
+		- calculate out z
+		- calculate out a
+		- calculate e01, e02
+		- calculate total e
+
+	- back propagate
+		- calculate delta
 
 - projects
 	- iris
