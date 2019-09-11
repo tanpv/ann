@@ -1,3 +1,31 @@
+<<<<<<< HEAD
+- network with one neuron
+	- one data point with weight
+	- mean square error
+	- what meaning of traing the network
+	- gradient descent
+	- learning rate
+	- multiple data point
+	- batch size
+	- epoch
+	- weight , bias, activation function
+	- gradient descent with multiple variable function
+	
+- network with one layer
+
+
+- network with multiple layer
+
+
+- iris dataset
+	- input layer
+	- output layer
+
+
+- mnis dataset
+	- input layer
+	- output layer
+=======
 -----------------------------
 - neuron
 	- weight
@@ -59,3 +87,4 @@ road map
 		-
 		- 
 -----------------------------
+>>>>>>> a80f90e8b4f2597d9bb016583d658e78bd1d4107
