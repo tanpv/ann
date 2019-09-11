@@ -30,6 +30,11 @@
 
 	- back propagate
 		- calculate delta
+		- calculate derivative on weight
+		- calculate derivative on bias
+		- change weight
+		- change bias
+
 
 - projects
 	- iris
