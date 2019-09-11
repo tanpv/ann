@@ -217,7 +217,7 @@ nn = NeuralNetwork(network_structure,
 					learning_rate,
 					epoch)
 # nn.feed_forward()
-# nn.delta()
+# nn.delta()	
 # nn.derivative()
 # nn.e()
 
