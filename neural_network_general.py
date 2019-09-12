@@ -43,8 +43,8 @@ class NeuralNetwork():
 		self.epoch = epoch
 
 		self.init_weight()
-		# self.init_bias()
-		# self.init_input_output()
+		self.init_bias()
+		self.init_input_output()
 
 
 	def init_weight(self):
@@ -58,13 +58,11 @@ class NeuralNetwork():
 
 	def init_bias(self):
 		print('init bias')
-
-		self.b_hiden = np.random.randn(self.hiden_num, 1)
-		print('b_hiden', self.b_hiden)
-
-		self.b_output = np.random.randn(self.output_num, 1)
-		print('b_output', self.b_output)
-		print('\n')
+		self.biases = []
+		for i in range(1, len(network)):
+			bias = np.random.randn(self.network[i],1)
+			print(bias.shape)
+			self.biases.append(bias)
 
 
 	def init_input_output(self):
@@ -110,46 +108,82 @@ class NeuralNetwork():
 		# print('e_sum', self.e_sum)
 
 
+	def delta_layer(self, a_l1, weight_l1_to_l2, delta_l2):
+		'''
+			suppose know
+				- a at layer l1
+				- weight from l1 to l2
+				- delta at layer l2
 
-	def delta(self, log=False):
-		self.delta_output = (self.a_output-self.output)*self.a_output*(1-self.a_output)
+			calculate
+				- delta at layer l1
+		'''
+		delta_l1 = np.dot(weight_l1_to_l2, delta_l2)*a_l1*(1-a_l1)
+		return delta_l1
+
+
+	def delta_network(self, log=False):
+		
+		self.deltas = []
+
+		# calculate delta at final layer
+		a_output = self.a_nn[len(self.a_nn)-1]
+		delta_output = (a_output - self.output)*a_output*(1-a_output)
+		self.deltas.append(delta_output)
+
+		# calculate delta of hiden layer
+		delta_l2 = delta_output
+		for i in range(len(self.network)-2):
+			idx = len(self.network) - 2 - i
+			
+			a_l1 = self.a_nn[idx-1]
+			weight_l1_to_l2 = self.weights[idx]
+			delta_l2 = self.delta_layer(a_l1, weight_l1_to_l2, delta_l2)
+
+			self.deltas.append(delta_l2)
+
 		if log:
-			print('delta_output', self.delta_output)
-			print('delta_output.shape', self.delta_output.shape)
-			print('\n')
-
-		# need reshape after dot product here
-		self.delta_hiden = np.dot(self.w_hiden_to_output, self.delta_output) * self.a_hiden * (1-self.a_hiden)
-		if log:
-			print('delta_hiden', self.delta_hiden)
-			print('delta_hiden shape', self.delta_hiden.shape)
-			print('\n')
-
+			for i in self.deltas:
+				print('delta', i)
+		
 
 	def derivative(self, log=False):
-		self.derivative_error_respect_w_out = self.w_hiden_to_output * self.delta_output
-		if log:
-			print('derivative weight out', self.derivative_error_respect_w_out)
-			print('derivative weight out shape', self.derivative_error_respect_w_out.shape)
-			print('\n')
+		self.derivative_weights = []
+		self.derivative_biases = []
 
-		self.derivative_error_respect_b_out = self.delta_output
-		if log:
-			print('derivative bias out', self.derivative_error_respect_b_out)
-			print('derivative bias out shape', self.derivative_error_respect_b_out.shape)
-			print('\n')
+		print('weights', self.weights)
+		print('deltas', self.deltas)
 
-		self.derivative_error_respect_w_hiden = self.w_input_to_hiden * self.delta_hiden
-		if log:
-			print('derivative weight hiden', self.derivative_error_respect_w_hiden)
-			print('derivative weight hiden shape', self.derivative_error_respect_w_hiden.shape)
-			print('\n')
+		for i in range(len(self.weights)-1):
+			derivative_weight = self.weights[i] * self.deltas[len(self.weights)-1-i]
+			derivative_bias = self.deltas[len(self.weights)-1-i]
 
-		self.derivative_error_respect_b_hiden = self.delta_hiden
-		if log:
-			print('derivative bias hiden', self.derivative_error_respect_b_hiden)
-			print('derivative bias hiden shape', self.derivative_error_respect_b_hiden.shape)
-			print('\n')
+			self.derivative_weights.append(derivative_weight)
+			self.derivative_biases.append(derivative_bias)
+
+		# self.derivative_error_respect_w_out = self.w_hiden_to_output * self.delta_output
+		# if log:
+		# 	print('derivative weight out', self.derivative_error_respect_w_out)
+		# 	print('derivative weight out shape', self.derivative_error_respect_w_out.shape)
+		# 	print('\n')
+
+		# self.derivative_error_respect_b_out = self.delta_output
+		# if log:
+		# 	print('derivative bias out', self.derivative_error_respect_b_out)
+		# 	print('derivative bias out shape', self.derivative_error_respect_b_out.shape)
+		# 	print('\n')
+
+		# self.derivative_error_respect_w_hiden = self.w_input_to_hiden * self.delta_hiden
+		# if log:
+		# 	print('derivative weight hiden', self.derivative_error_respect_w_hiden)
+		# 	print('derivative weight hiden shape', self.derivative_error_respect_w_hiden.shape)
+		# 	print('\n')
+
+		# self.derivative_error_respect_b_hiden = self.delta_hiden
+		# if log:
+		# 	print('derivative bias hiden', self.derivative_error_respect_b_hiden)
+		# 	print('derivative bias hiden shape', self.derivative_error_respect_b_hiden.shape)
+		# 	print('\n')
 
 
 	def update_weight_bias(self):
@@ -171,36 +205,30 @@ class NeuralNetwork():
 
 
 	def feed_forward(self, log=False):
-		if log:
-			print('feed forward')
-			print(self.input.shape)
-			print(self.w_input_to_hiden.shape)
-			print(self.b_hiden.shape)
-			print('\n')
+		input = self.input
+		self.z_nn = []
+		self.a_nn = []
 
-		self.z_hiden = self.z(self.input, self.w_input_to_hiden, self.b_hiden)
-		if log:
-			print('z_hiden', self.z_hiden)
-			print('z_hiden.shape', self.z_hiden.shape)
-			print('\n')
+		for i in range(len(self.network)-1):
+		
+			# calculate z then add to list
+			z = self.z(input, self.weights[i], self.biases[i])
+			self.z_nn.append(z)
 
-		self.a_hiden = self.a(self.z_hiden)
-		if log:
-			print('a_hiden', self.a_hiden)
-			print('a_hiden.shape', self.a_hiden.shape)
-			print('\n')
+			# calculate a then add to list
+			a = self.a(z)
+			self.a_nn.append(a)
 
-		self.z_output = self.z(self.a_hiden, self.w_hiden_to_output, self.b_output)
-		if log:
-			print('z_output', self.z_output)
-			print('z_output.shape', self.z_output.shape)
-			print('\n')
+			# use for next layor
+			input = a
 
-		self.a_output = self.a(self.z_output)
-		if log:
-			print('a_output', self.a_output)
-			print('a_output.shape', self.a_output.shape)
-			print('\n')		
+			if log:
+				print('z', z)
+				print('z.shape', z.shape)
+				print('\n')
+				print('a', a)
+				print('a.shape', a.shape)
+				print('\n')
 
 
 
@@ -211,8 +239,9 @@ epoch = 100
 nn = NeuralNetwork( network,
 					learning_rate,
 					epoch)
-# nn.feed_forward()
-# nn.delta()	
-# nn.derivative()
+
+nn.feed_forward(log=True)
+nn.delta_network(log=True)
+nn.derivative()
 # nn.e()
 # nn.train()

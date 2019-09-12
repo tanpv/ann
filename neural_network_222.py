@@ -102,7 +102,6 @@ class NeuralNetwork():
 		z = np.dot(np.transpose(weight), input) + bias
 		return z
 
-
 	def error(self):
 		'''
 			use mean square error
@@ -111,12 +110,22 @@ class NeuralNetwork():
 		self.e = np.square(self.a_output-self.output)/2
 		self.e_sum = np.sum(self.e)
 
-		# print('e', self.e)
-		# print('e_sum', self.e_sum)
+
+	def delta_layer(self, a_l1, weight_l1_to_l2, delta_l2):
+		'''
+			suppose know
+				- a at layer l1
+				- weight from l1 to l2
+				- delta at layer l2
+
+			calculate
+				- delta at layer l1
+		'''
+		delta_l1 = np.dot(weight_l1_to_l2, delta_l2)*a_l1*(1-a_l1)
+		return delta_l1
 
 
-
-	def delta(self, log=False):
+	def delta_network(self, log=False):
 		self.delta_output = (self.a_output-self.output)*self.a_output*(1-self.a_output)
 		if log:
 			print('delta_output', self.delta_output)
@@ -124,7 +133,8 @@ class NeuralNetwork():
 			print('\n')
 
 		# need reshape after dot product here
-		self.delta_hiden = np.dot(self.w_hiden_to_output, self.delta_output) * self.a_hiden * (1-self.a_hiden)
+		# self.delta_hiden = np.dot(self.w_hiden_to_output, self.delta_output) * self.a_hiden * (1-self.a_hiden)
+		self.delta_hiden = self.delta_layer(self.a_hiden, self.w_hiden_to_output, self.delta_output)
 		if log:
 			print('delta_hiden', self.delta_hiden)
 			print('delta_hiden shape', self.delta_hiden.shape)
@@ -169,7 +179,7 @@ class NeuralNetwork():
 		self.errors = []
 		for i in range(self.epoch):
 			self.feed_forward()
-			self.delta()
+			self.delta_network()
 			self.derivative()
 			self.update_weight_bias()
 			self.error()
@@ -215,20 +225,19 @@ class NeuralNetwork():
 		if log:
 			print('a_output', self.a_output)
 			print('a_output.shape', self.a_output.shape)
-			print('\n')		
+			print('\n')
 
 
 
 network_structure = [2,2,2]
 learning_rate = 0.1
-epoch = 1000
+epoch = 500
 
 nn = NeuralNetwork(network_structure,
 					learning_rate,
 					epoch)
-# nn.feed_forward()
-# nn.delta()	
-# nn.derivative()
+nn.feed_forward(log=True)
+nn.delta_network(log=True)	
+nn.derivative(log=True)
 # nn.e()
-
-nn.train()
+# nn.train()
