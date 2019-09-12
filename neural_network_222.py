@@ -166,13 +166,23 @@ class NeuralNetwork():
 
 
 	def train(self):
+		self.errors = []
 		for i in range(self.epoch):
 			self.feed_forward()
 			self.delta()
 			self.derivative()
 			self.update_weight_bias()
 			self.error()
+			self.errors.append(self.e_sum)
 			print('error at epoch {0} {1}'.format(i, self.e_sum))
+
+		self.plot_train_error()
+
+
+	def plot_train_error(self):		
+		plt.xticks(np.arange(0, self.epoch, 1))
+		plt.plot(range(self.epoch), self.errors)
+		plt.show()
 
 
 	def feed_forward(self, log=False):
@@ -210,8 +220,8 @@ class NeuralNetwork():
 
 
 network_structure = [2,2,2]
-learning_rate = 0.5
-epoch = 100
+learning_rate = 0.1
+epoch = 1000
 
 nn = NeuralNetwork(network_structure,
 					learning_rate,
