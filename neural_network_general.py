@@ -155,7 +155,7 @@ class NeuralNetwork():
 		print('deltas', self.deltas)
 
 		for i in range(len(self.weights)-1):
-			derivative_weight = self.weights[i] * self.deltas[len(self.weights)-1-i]
+			derivative_weight = self.a_nn[] * self.deltas[len(self.weights)-1-i]
 			derivative_bias = self.deltas[len(self.weights)-1-i]
 
 			self.derivative_weights.append(derivative_weight)

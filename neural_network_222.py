@@ -154,8 +154,10 @@ class NeuralNetwork():
 			print('derivative bias out shape', self.derivative_error_respect_b_out.shape)
 			print('\n')
 
-		self.derivative_error_respect_w_hiden = self.w_input_to_hiden * self.delta_hiden
+		self.derivative_error_respect_w_hiden = self.delta_hiden * self.input.transpose()
 		if log:
+			print(self.input.shape)
+			print(self.delta_hiden.shape)
 			print('derivative weight hiden', self.derivative_error_respect_w_hiden)
 			print('derivative weight hiden shape', self.derivative_error_respect_w_hiden.shape)
 			print('\n')
@@ -231,13 +233,13 @@ class NeuralNetwork():
 
 network_structure = [2,2,2]
 learning_rate = 0.1
-epoch = 500
+epoch = 1000
 
 nn = NeuralNetwork(network_structure,
 					learning_rate,
 					epoch)
-nn.feed_forward(log=True)
-nn.delta_network(log=True)	
-nn.derivative(log=True)
+# nn.feed_forward(log=True)
+# nn.delta_network(log=True)	
+# nn.derivative(log=True)
 # nn.e()
-# nn.train()
+nn.train()
