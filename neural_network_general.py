@@ -51,6 +51,10 @@ class NeuralNetwork():
 		print('init weight ---------------- ')
 		self.weights = []
 		for i in range(len(network)-1):
+			# weight matrix with
+			# with rows are number of neuron on (l-1) layer
+			# with columns are number of neuron on l layer
+			# note that for network of 3 layers --> have only 2 weight matrix
 			weight = np.random.randn(self.network[i], self.network[i+1])			
 			self.weights.append(weight)
 			print('weight.shape' ,weight.shape)
@@ -62,6 +66,9 @@ class NeuralNetwork():
 		print('init bias ---------------- ')
 		self.biases = []
 		for i in range(1, len(network)):
+			# input layer no have bias
+			# network with l layers have l-1 bias matrix
+			# number of rows equal to number of neuron on one layer
 			bias = np.random.randn(self.network[i],1)
 			self.biases.append(bias)
 			print('bias.shape', bias.shape)
@@ -71,9 +78,12 @@ class NeuralNetwork():
 
 	def init_input_output(self):
 		print('init input output -------------------')
-		self.input = np.array([[0.1, 0.3]]).reshape(2,1)
+		# input is init as matrix
+		# 1 column and number of row is number of input
+		# same with output
+		self.input = np.array([[0.8, 0.1]]).reshape(2,1)
 		print('input', self.input)
-		self.output = np.array([[0.7, 0.2]]).reshape(2,1)
+		self.output = np.array([[0.4, 0.7]]).reshape(2,1)
 		print('output', self.output)
 		print('\n')
 
@@ -93,13 +103,7 @@ class NeuralNetwork():
 		'''
 			sum(i*w) + b
 		'''
-		# print('input.shape', input.shape)
-		# print('weigh.shape', weight.shape)
-		# print('bias.shape', bias.shape)
-		# print('np.transpose(weight).shape', np.transpose(weight).shape)
-		# print('input.shape', input.shape)
 		z = np.dot(np.transpose(weight), input) + bias
-		# print('z.shape', z.shape)
 		return z
 
 
@@ -224,7 +228,6 @@ class NeuralNetwork():
 		self.z_nn = []
 		self.a_nn = []
 
-
 		for i in range(len(self.network)-1):
 		
 			# calculate z then add to list
@@ -239,7 +242,6 @@ class NeuralNetwork():
 
 			# use for next layor
 			input = a
-
 
 		if log:
 			print('feed forward a -------------------')
@@ -260,8 +262,8 @@ class NeuralNetwork():
 
 
 
-network = [2,5,2]
-learning_rate = 0.5
+network = [2,3,2]
+learning_rate = 10
 epoch = 1000
 
 nn = NeuralNetwork( network,
