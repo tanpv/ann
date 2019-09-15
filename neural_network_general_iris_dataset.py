@@ -197,14 +197,16 @@ class NeuralNetwork():
 
 		# calculate delta of hiden layer
 		delta_l2 = delta_output
-		for i in range(len(self.network)-2):
-			idx = len(self.network) - 2 - i
+		for i in range(len(self.a_nn)-1):
+			idx = len(self.a_nn) - 1 - i
 			
 			a_l1 = self.a_nn[idx-1]
 			weight_l1_to_l2 = self.weights[idx]
 			delta_l2 = self.delta_layer(a_l1, weight_l1_to_l2, delta_l2)
 
 			self.deltas.append(delta_l2)
+
+		self.deltas.reverse()
 
 		if log:
 			print('delta -----------------------')
@@ -222,8 +224,8 @@ class NeuralNetwork():
 		# print('self.deltas[len(self.a_nn)-1].shape', self.deltas[len(self.a_nn)-1].shape)
 		# print('self.input.transpose().shape', self.input.transpose().shape)
 		# print('\n')
-		d_weight = self.deltas[len(self.a_nn)-1] * input.transpose()
-		d_bias = self.deltas[len(self.a_nn)-1]
+		d_weight = input * self.deltas[0].transpose()
+		d_bias = self.deltas[0]
 		self.d_weights.append(d_weight)
 		self.d_biases.append(d_bias)
 
@@ -238,13 +240,13 @@ class NeuralNetwork():
 			for d in self.deltas:
 				print(d.shape)
 
-		for i in range(1, len(self.a_nn)):
+		for i in range(len(self.a_nn)-1):
 			if log:
 				print('self.deltas[len(self.a_nn)-1-i].shape', self.deltas[len(self.a_nn)-1-i].shape)
 				print('self.a_nn[i].transpose().shape', self.a_nn[i].transpose().shape)
 
-			d_weight = self.deltas[len(self.a_nn)-1-i] * self.a_nn[i-1].transpose()
-			d_bias = self.deltas[len(self.a_nn)-1-i]
+			d_weight = self.a_nn[i] * self.deltas[i+1].transpose()
+			d_bias = self.deltas[i+1]
 
 			self.d_weights.append(d_weight)
 			self.d_biases.append(d_bias)
@@ -280,7 +282,7 @@ class NeuralNetwork():
 			if log:
 				print('self.weights[i].shape', self.weights[i].shape)
 				print('self.d_weights[i].shape', self.d_weights[i].shape)
-			self.weights[i] = self.weights[i] - self.learning_rate*self.d_weights[i].transpose()
+			self.weights[i] = self.weights[i] - self.learning_rate*self.d_weights[i]
 			self.biases[i] = self.biases[i] - self.learning_rate*self.d_biases[i]
 
 
@@ -375,21 +377,11 @@ class NeuralNetwork():
 
 # higher at middle is better
 # a good model for iris
-network = [4,20,3]
-network = [4,12,6,3]
-network = [4,3]
+network = [4,100,3]
 learning_rate = 0.3
-epoch = 10000
+epoch = 1000
 load_model = False
 
-# input = np.array([[0.64556962],
-#  [0.44303797],
-#  [0.17721519],
-#  [0.02531646]])
-
-# output = np.array([[1.],
-#  [0.],
-#  [0.]])
 
 nn = NeuralNetwork( network,
 					learning_rate,

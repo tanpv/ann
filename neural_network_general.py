@@ -298,7 +298,7 @@ class NeuralNetwork():
 
 
 
-network = [2,3,4,5,6,7,2]
+network = [2,200,2]
 learning_rate = 1
 epoch = 1000
 
