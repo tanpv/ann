@@ -123,6 +123,7 @@ class NeuralNetwork():
 			# number of rows equal to number of neuron on one layer
 			bias = np.random.randn(self.network[i],1)
 			self.biases.append(bias)
+
 			print('bias.shape', bias.shape)
 			print('bias', bias)
 			print('\n')
@@ -226,11 +227,23 @@ class NeuralNetwork():
 		self.d_weights.append(d_weight)
 		self.d_biases.append(d_bias)
 
+		if log:
+			print('calculate derivative')
+			print('\n')
+			print('self.a_nn')
+			for a in self.a_nn:
+				print(a.shape)
+
+			print('self.deltas')
+			for d in self.deltas:
+				print(d.shape)
+
 		for i in range(1, len(self.a_nn)):
-			# broadcast
-			# print('self.deltas[len(self.a_nn)-1-i].shape', self.deltas[len(self.a_nn)-1-i].shape)
-			# print('self.a_nn[i].transpose().shape', self.a_nn[i].transpose().shape)
-			d_weight = self.deltas[len(self.a_nn)-1-i] * self.a_nn[i].transpose()
+			if log:
+				print('self.deltas[len(self.a_nn)-1-i].shape', self.deltas[len(self.a_nn)-1-i].shape)
+				print('self.a_nn[i].transpose().shape', self.a_nn[i].transpose().shape)
+
+			d_weight = self.deltas[len(self.a_nn)-1-i] * self.a_nn[i-1].transpose()
 			d_bias = self.deltas[len(self.a_nn)-1-i]
 
 			self.d_weights.append(d_weight)
@@ -239,8 +252,8 @@ class NeuralNetwork():
 		if log:
 			print('derivative weights ----------------------')
 			for d in self.d_weights:
-				print('d_weight.shape', d.shape)
-				print('d_weight', d)
+				print('d_weight.shape', d.transpose().shape)
+				# print('d_weight', d.transpose())
 				print('\n')
 
 			for d in self.d_biases:
@@ -251,9 +264,22 @@ class NeuralNetwork():
 	def update_weight_bias(self, log=False):
 		# update
 
+		if log:
+			print('self.weights')
+			for w in self.weights:
+				print('w.shape', w.shape)
+
+			print('\n')
+			print('self.d_weights')
+			for d in self.d_weights:
+				print('d.shape', d.shape)
+
+			print('\n')
+
 		for i in range(len(self.weights)-1):
-			# print('self.weights[i].shape', self.weights[i].shape)
-			# print('self.d_weights[i].shape', self.d_weights[i].shape)
+			if log:
+				print('self.weights[i].shape', self.weights[i].shape)
+				print('self.d_weights[i].shape', self.d_weights[i].shape)
 			self.weights[i] = self.weights[i] - self.learning_rate*self.d_weights[i].transpose()
 			self.biases[i] = self.biases[i] - self.learning_rate*self.d_biases[i]
 
@@ -307,16 +333,20 @@ class NeuralNetwork():
 
 		if log:
 			print('feed forward a -------------------')
+			print(len(self.a_nn))
 			print(self.a_nn[0])
 			print(self.a_nn[1])
+			print(self.a_nn[2])
 			# for i in range(len(self.a_nn)):
 			# 	print('a', self.a_nn[i])
 			# 	print('a.shape', self.a_nn[i])
 			# 	print('\n')
 
 			print('feed forward z -------------------')
+			print(len(self.a_nn))
 			print(self.z_nn[0])
 			print(self.z_nn[1])
+			print(self.z_nn[2])
 			# for i in self.z_nn:				
 			# 	print('z', z)
 			# 	print('z.shape', z.shape)
@@ -346,19 +376,30 @@ class NeuralNetwork():
 # higher at middle is better
 # a good model for iris
 network = [4,20,3]
-learning_rate = 0.2
+network = [4,12,6,3]
+network = [4,3]
+learning_rate = 0.3
 epoch = 10000
 load_model = False
+
+# input = np.array([[0.64556962],
+#  [0.44303797],
+#  [0.17721519],
+#  [0.02531646]])
+
+# output = np.array([[1.],
+#  [0.],
+#  [0.]])
 
 nn = NeuralNetwork( network,
 					learning_rate,
 					epoch,
 					load_model)
 
-# nn.feed_forward(log=True)
-# nn.delta_network(log=True)
-# nn.derivative()
+# nn.feed_forward(log=True, input=input)
+# nn.delta_network(log=True, output=output)
+# nn.derivative(log=True, input=input)
 # nn.update_weight_bias()
 # nn.error()
 nn.train(log=False)
-nn.save_model()
+# nn.save_model()

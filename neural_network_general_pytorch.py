@@ -53,8 +53,8 @@ class NeuralNetwork():
 		self.learning_rate = learning_rate
 		self.epoch = epoch
 
-		self.load_mnist()
-		# self.load_iris()
+		# self.load_mnist()
+		self.load_iris()
 		
 		if load_model:
 			self.load_model()
@@ -383,19 +383,24 @@ class NeuralNetwork():
 
 
 
+# iris
 # higher at middle is better
 # # a good model for iris
-# network = [4,30,3]
-# learning_rate = 0.3
-# epoch = 1000
-# load_model = False
-# gpu = False
-
-network = [784,40,10]
-learning_rate = 0.12
-epoch = 10
+network = [4,100,3]
+network = [4,50,50,3]
+network = [4,25,50,25,3]
+network = [4,12,6,3]
+learning_rate = 0.3
+epoch = 1000
 load_model = False
 gpu = False
+
+# mnist
+# network = [784,40,10]
+# learning_rate = 0.12
+# epoch = 10
+# load_model = False
+# gpu = False
 
 nn = NeuralNetwork( network,
 					learning_rate,

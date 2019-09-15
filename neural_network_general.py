@@ -25,8 +25,9 @@
 	- minimum neural network
 
 	- convert all of this to general network
-'''
 
+	- update with assert
+'''
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -48,6 +49,7 @@ class NeuralNetwork():
 
 
 	def init_weight(self):
+		# network = [2,3,4,2]
 		print('init weight ---------------- ')
 		self.weights = []
 		for i in range(len(network)-1):
@@ -60,6 +62,12 @@ class NeuralNetwork():
 			print('weight.shape' ,weight.shape)
 			print('weight', weight)
 			print('\n')
+
+		# recheck weight in good shape
+		for i,w in enumerate(self.weights):
+			# print(w.shape)
+			# print((self.network[i], self.network[i+1]))
+			assert w.shape == (self.network[i], self.network[i+1]), 'invalid weight shape'
 
 
 	def init_bias(self):
@@ -74,6 +82,11 @@ class NeuralNetwork():
 			print('bias.shape', bias.shape)
 			print('bias', bias)
 			print('\n')
+
+		# recheck bias shape
+		for i,b in enumerate(self.biases):
+			assert  b.shape == (self.network[i+1],1), 'invalid bias shape'
+
 
 
 	def init_input_output(self):
@@ -243,6 +256,14 @@ class NeuralNetwork():
 			# use for next layor
 			input = a
 
+		# recheck z_nn and a_nn
+		for i,z in enumerate(self.z_nn):
+			assert z.shape == (self.network[i+1], 1), 'invalid z shape'
+		
+		for i,a in enumerate(self.a_nn):
+			assert a.shape == (self.network[i+1], 1), 'invalid a shape'
+
+
 		if log:
 			print('feed forward a -------------------')
 			print(self.a_nn[0])
@@ -262,17 +283,17 @@ class NeuralNetwork():
 
 
 
-network = [2,3,2]
+network = [2,3,4,2]
 learning_rate = 10
-epoch = 1000
+epoch = 100
 
 nn = NeuralNetwork( network,
 					learning_rate,
 					epoch)
 
-# nn.feed_forward(log=True)
+nn.feed_forward(log=True)
 # nn.delta_network(log=True)
 # nn.derivative()
 # nn.update_weight_bias()
 # nn.error()
-nn.train(log=False)
+# nn.train(log=False)
