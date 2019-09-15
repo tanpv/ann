@@ -139,33 +139,45 @@ class NeuralNetwork():
 			calculate
 				- delta at layer l1
 		'''
+		assert weight_l1_to_l2.shape[1]==delta_l2.shape[0], 'invalid shape for dot operation'
+		assert np.dot(weight_l1_to_l2, delta_l2).shape == a_l1.shape, 'invalid element wise operation'
 		delta_l1 = np.dot(weight_l1_to_l2, delta_l2)*a_l1*(1-a_l1)
 		return delta_l1
 
 
 	def delta_network(self, log=False):
+		'''
+			how to make sure this is correct one ?
+		'''
 		
-		self.deltas = []
+		self.delta = []
 
 		# calculate delta at final layer
 		a_output = self.a_nn[len(self.a_nn)-1]
 		delta_output = (a_output - self.output)*a_output*(1-a_output)
-		self.deltas.append(delta_output)
+		self.delta.append(delta_output)
 
 		# calculate delta of hiden layer
+		# this is backward operation
 		delta_l2 = delta_output
-		for i in range(len(self.network)-2):
-			idx = len(self.network) - 2 - i
-			
+		for i in range(len(self.a_nn)-1):
+			idx = len(self.a_nn) - 1 - i
 			a_l1 = self.a_nn[idx-1]
 			weight_l1_to_l2 = self.weights[idx]
 			delta_l2 = self.delta_layer(a_l1, weight_l1_to_l2, delta_l2)
 
-			self.deltas.append(delta_l2)
+			self.delta.append(delta_l2)
+
+		# reverse so it is easier to do next work
+		self.delta.reverse()
+
+		# verify delta shape element
+		for i, d in enumerate(self.delta):
+			assert d.shape == self.z_nn[i].shape, 'invalid delta shape'
 
 		if log:
 			print('delta -----------------------')
-			for i in self.deltas:
+			for i in self.delta:
 				print('delta.shape', i.shape)
 				print('delta', i)
 				print('\n')
@@ -175,24 +187,30 @@ class NeuralNetwork():
 		self.d_weights = []
 		self.d_biases = []
 
-		# print('self.deltas[len(self.a_nn)-1]', self.deltas[len(self.a_nn)-1])
-		# print('self.deltas[len(self.a_nn)-1].shape', self.deltas[len(self.a_nn)-1].shape)
+		# print('self.delta[0].shape', self.delta[0].shape)
 		# print('self.input.transpose().shape', self.input.transpose().shape)
-		# print('\n')
-		d_weight = self.deltas[len(self.a_nn)-1] * self.input.transpose()
-		d_bias = self.deltas[len(self.a_nn)-1]
+		d_weight = self.input * self.delta[0].transpose()
+		d_bias = self.delta[0]
 		self.d_weights.append(d_weight)
 		self.d_biases.append(d_bias)
 
-		for i in range(1, len(self.a_nn)):
+		for i in range(len(self.a_nn)-1):
 			# broadcast
-			# print('self.deltas[len(self.a_nn)-1-i].shape', self.deltas[len(self.a_nn)-1-i].shape)
-			# print('self.a_nn[i].transpose().shape', self.a_nn[i].transpose().shape)
-			d_weight = self.deltas[len(self.a_nn)-1-i] * self.a_nn[i].transpose()
-			d_bias = self.deltas[len(self.a_nn)-1-i]
+			d_weight = self.a_nn[i] * self.delta[i+1].transpose() 
+			d_bias = self.delta[i+1]
 
 			self.d_weights.append(d_weight)
 			self.d_biases.append(d_bias)
+
+
+		# check derivative
+		for i, d in enumerate(self.d_weights):
+			# print(d.shape)
+			# print(self.weights[i].shape)
+			assert d.shape == self.weights[i].shape, 'invalid derivative shape'
+
+		for i,b in enumerate(self.d_biases):
+			assert b.shape == self.biases[i].shape, 'invalid derivative shape'
 
 		if log:
 			print('derivative weights ----------------------')
@@ -208,11 +226,8 @@ class NeuralNetwork():
 
 	def update_weight_bias(self, log=False):
 		# update
-
 		for i in range(len(self.weights)-1):
-			# print('self.weights[i].shape', self.weights[i].shape)
-			# print('self.d_weights[i].shape', self.d_weights[i].shape)
-			self.weights[i] = self.weights[i] - self.learning_rate*self.d_weights[i].transpose()
+			self.weights[i] = self.weights[i] - self.learning_rate*self.d_weights[i]
 			self.biases[i] = self.biases[i] - self.learning_rate*self.d_biases[i]
 
 
@@ -283,17 +298,17 @@ class NeuralNetwork():
 
 
 
-network = [2,3,4,2]
-learning_rate = 10
-epoch = 100
+network = [2,3,4,5,6,7,2]
+learning_rate = 1
+epoch = 1000
 
 nn = NeuralNetwork( network,
 					learning_rate,
 					epoch)
 
-nn.feed_forward(log=True)
+# nn.feed_forward(log=True)
 # nn.delta_network(log=True)
 # nn.derivative()
 # nn.update_weight_bias()
 # nn.error()
-# nn.train(log=False)
+nn.train(log=False)
