@@ -32,7 +32,7 @@
 		- learning rate
 		- epoch
 
-	- mini batch
+	- stochastic gradient descent
 '''
 
 
@@ -66,33 +66,39 @@ class NeuralNetwork():
 			- load data from csv file
 			- build input array and output array
 		'''
-		iris_frame = pd.read_csv('iris.csv')
+		self.iris_frame = pd.read_csv('iris.csv')
 		
 		# convert species from text to number
-		iris_frame.loc[iris_frame['species']=='setosa', 'species'] = 0
-		iris_frame.loc[iris_frame['species']=='versicolor', 'species'] = 1
-		iris_frame.loc[iris_frame['species']=='virginica', 'species'] = 2
+		self.iris_frame.loc[self.iris_frame['species']=='setosa', 'species'] = 0
+		self.iris_frame.loc[self.iris_frame['species']=='versicolor', 'species'] = 1
+		self.iris_frame.loc[self.iris_frame['species']=='virginica', 'species'] = 2
 
 		# normalize so value is inside 0,1
-		max_for_normalize = iris_frame[['sepal_length',
-										'sepal_width',
-										'petal_length',
-										'petal_width']].values.max()
+		self.max_for_normalize = self.iris_frame[['sepal_length',
+												'sepal_width',
+												'petal_length',
+												'petal_width']].values.max()
 
-		self.input = [np.reshape(i, (4,1)) / max_for_normalize for i in iris_frame[['sepal_length',
-																'sepal_width',
-																'petal_length',
-																'petal_width']].values]
 
-		self.output = [self.vectorized(o) for o in iris_frame['species'].values]
-		
-		print('input.shape', self.input[0].shape)
-		print('input', self.input[0])
-		print('\n')
-		print('output.shape', self.output[0].shape)
-		print('output', self.output[0])
-		print('\n')
-		print('data length', len(self.input))
+	def shuffle_data(self):
+		self.iris_frame = self.iris_frame.sample(frac=1).reset_index(drop=True)
+
+		self.input = [np.reshape(i, (4,1)) for i in self.iris_frame[['sepal_length',
+																	'sepal_width',
+																	'petal_length',
+																	'petal_width']].values]
+
+		self.input = self.input / self.max_for_normalize
+
+		self.output = [self.vectorized(o) for o in self.iris_frame['species'].values]
+
+		# print('input.shape', self.input[0].shape)
+		# print('input', self.input[0])
+		# print('\n')
+		# print('output.shape', self.output[0].shape)
+		# print('output', self.output[0])
+		# print('\n')
+		# print('data length', len(self.input))
 
 
 	def vectorized(self, j):
@@ -293,6 +299,7 @@ class NeuralNetwork():
 
 		for i in range(self.epoch):
 			e_epoch = 0
+			self.shuffle_data()
 			for idx, input in enumerate(self.input):
 				output = self.output[idx]
 				self.feed_forward(input, log)
@@ -395,5 +402,6 @@ nn = NeuralNetwork( network,
 # nn.derivative(log=True, input=input)
 # nn.update_weight_bias()
 # nn.error()
+
 nn.train(log=False)
 # nn.save_model()

@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 - network with one neuron
 	- one data point with weight
 	- mean square error
@@ -87,4 +87,3 @@ road map
 		-
 		- 
 -----------------------------
->>>>>>> a80f90e8b4f2597d9bb016583d658e78bd1d4107
