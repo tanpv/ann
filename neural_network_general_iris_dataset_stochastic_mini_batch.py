@@ -46,13 +46,17 @@ class NeuralNetwork():
 				network,
 				learning_rate,
 				epoch,
-				load_model):
+				load_model,
+				batch_size):
 		
 		self.network = network
 		self.learning_rate = learning_rate
 		self.epoch = epoch
+		self.batch_size =batch_size
 
 		self.load_data()
+		
+		self.shuffle_data_in_batch()
 		
 		if load_model:
 			self.load_model()
@@ -79,26 +83,43 @@ class NeuralNetwork():
 												'petal_length',
 												'petal_width']].values.max()
 
+	def index_marks(self, nrows, chunk_size):
+		return range(1 * chunk_size, (nrows // chunk_size + 1) * chunk_size, chunk_size)
 
-	def shuffle_data(self):
+	def shuffle_data_in_batch(self):
+		# random suffle
 		self.iris_frame = self.iris_frame.sample(frac=1).reset_index(drop=True)
 
-		self.input = [np.reshape(i, (4,1)) for i in self.iris_frame[['sepal_length',
-																	'sepal_width',
-																	'petal_length',
-																	'petal_width']].values]
+		batch_num = len(self.iris_frame) // self.batch_size
+		
+		# add to batchs
+		self.batchs=[]
+		start = 0
+		for i in range(batch_num):
+			batch = self.iris_frame.loc[start:start+self.batch_size-1,:]
+			start = start + self.batch_size
+			self.batchs.append(batch)
 
-		self.input = self.input / self.max_for_normalize
 
-		self.output = [self.vectorized(o) for o in self.iris_frame['species'].values]
+		# for batch in self.batchs[:1]:
+		# 		self.input = [np.reshape(i, (4,1)) for i in batch[['sepal_length',
+		# 															'sepal_width',
+		# 															'petal_length',
+		# 															'petal_width']].values]
 
-		# print('input.shape', self.input[0].shape)
-		# print('input', self.input[0])
-		# print('\n')
-		# print('output.shape', self.output[0].shape)
-		# print('output', self.output[0])
-		# print('\n')
-		# print('data length', len(self.input))
+		# 		self.input = self.input / self.max_for_normalize
+
+		# 		self.output = [self.vectorized(o) for o in batch['species'].values]
+
+
+
+		# 		print('input.shape', self.input[0].shape)
+		# 		print('input', self.input[0])
+		# 		print('\n')
+		# 		print('output.shape', self.output[0].shape)
+		# 		print('output', self.output[0])
+		# 		print('\n')
+		# 		print('data length', len(self.input))
 
 
 	def vectorized(self, j):
@@ -298,8 +319,30 @@ class NeuralNetwork():
 		self.errors = []
 
 		for i in range(self.epoch):
+			
 			e_epoch = 0
-			self.shuffle_data()
+			
+			self.shuffle_data_in_batch()
+
+			for batch in self.batchs:
+				# for batch in self.batchs[:1]:
+		# 		self.input = [np.reshape(i, (4,1)) for i in batch[['sepal_length',
+		# 															'sepal_width',
+		# 															'petal_length',
+		# 															'petal_width']].values]
+
+		# 		self.input = self.input / self.max_for_normalize
+
+		# 		self.output = [self.vectorized(o) for o in batch['species'].values]
+		
+		# 		print('input.shape', self.input[0].shape)
+		# 		print('input', self.input[0])
+		# 		print('\n')
+		# 		print('output.shape', self.output[0].shape)
+		# 		print('output', self.output[0])
+		# 		print('\n')
+		# 		print('data length', len(self.input))				
+
 			for idx, input in enumerate(self.input):
 				output = self.output[idx]
 				self.feed_forward(input, log)
@@ -308,9 +351,11 @@ class NeuralNetwork():
 				self.update_weight_bias(log)
 				self.error(input, output)
 				e_epoch = e_epoch + self.e_sum
-				# self.errors.append(self.e_sum)
+			
 			e_epoch = e_epoch / len(self.input)
+			
 			self.errors.append(e_epoch)
+			
 			print('error at epoch {0} {1}'.format(i, e_epoch))
 
 		self.plot_train_error()
@@ -389,13 +434,15 @@ class NeuralNetwork():
 network = [4,100,3]
 learning_rate = 0.3
 epoch = 1000
+batch_size = 5
 load_model = False
 
 
 nn = NeuralNetwork( network,
-					learning_rate,
+					learning_rate,					
 					epoch,
-					load_model)
+					load_model,
+					batch_size)
 
 # nn.feed_forward(log=True, input=input)
 # nn.delta_network(log=True, output=output)
@@ -403,5 +450,5 @@ nn = NeuralNetwork( network,
 # nn.update_weight_bias()
 # nn.error()
 
-nn.train(log=False)
+# nn.train(log=False)
 # nn.save_model()
