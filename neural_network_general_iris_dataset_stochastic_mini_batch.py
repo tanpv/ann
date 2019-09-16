@@ -325,42 +325,49 @@ class NeuralNetwork():
 			self.shuffle_data_in_batch()
 
 			for batch in self.batchs:
-				# for batch in self.batchs[:1]:
-		# 		self.input = [np.reshape(i, (4,1)) for i in batch[['sepal_length',
-		# 															'sepal_width',
-		# 															'petal_length',
-		# 															'petal_width']].values]
+				
+				self.input = [np.reshape(i, (4,1)) for i in batch[['sepal_length',
+																	'sepal_width',
+																	'petal_length',
+																	'petal_width']].values]
 
-		# 		self.input = self.input / self.max_for_normalize
+				self.input = self.input / self.max_for_normalize
 
-		# 		self.output = [self.vectorized(o) for o in batch['species'].values]
-		
-		# 		print('input.shape', self.input[0].shape)
-		# 		print('input', self.input[0])
-		# 		print('\n')
-		# 		print('output.shape', self.output[0].shape)
-		# 		print('output', self.output[0])
-		# 		print('\n')
-		# 		print('data length', len(self.input))				
+				self.output = [self.vectorized(o) for o in batch['species'].values]
 
-			for idx, input in enumerate(self.input):
-				output = self.output[idx]
-				self.feed_forward(input, log)
-				self.delta_network(output, log)
-				self.derivative(input, log)
+				# print('input.shape', self.input[0].shape)
+				# print('input', self.input[0])
+				# print('\n')
+				# print('output.shape', self.output[0].shape)
+				# print('output', self.output[0])
+				# print('\n')
+				# print('data length', len(self.input))
+				
+				batch_d_w = [np.zeros(w.shape) for w in self.weights]
+				batch_d_b = [np.zeros(b.shape) for b in self.biases]
+				for idx, input in enumerate(self.input):
+					output = self.output[idx]
+					self.feed_forward(input, log)
+					self.delta_network(output, log)
+					self.derivative(input, log)
+					batch_d_w = [w+inb for w,inb in zip(self.d_weights, batch_d_w)]
+					batch_d_b = [b+inb for b,inb in zip(self.d_biases, batch_d_b)]
+
+				self.d_weights = [d_w/self.batch_size for d_w in batch_d_w] 
+				self.d_biases = [d_b/self.batch_size for d_b in batch_d_b]
+
 				self.update_weight_bias(log)
 				self.error(input, output)
 				e_epoch = e_epoch + self.e_sum
 			
-			e_epoch = e_epoch / len(self.input)
-			
+			e_epoch = e_epoch / len(self.batchs)
+		
 			self.errors.append(e_epoch)
-			
+		
 			print('error at epoch {0} {1}'.format(i, e_epoch))
 
 		self.plot_train_error()
 		self.predic()
-
 
 	def plot_train_error(self):		
 		plt.xticks(np.arange(0, self.epoch, 1))
@@ -409,19 +416,32 @@ class NeuralNetwork():
 			# 	print('\n')
 
 	def predic(self):
-		idxs = [33, 44, 2, 10, 12, 60, 12, 110, 130]
+		
+		self.shuffle_data_in_batch()
 
-		for idx in idxs:
-			input = self.input[idx]
-			output = self.output[idx]
-			self.feed_forward(input)
-			print(self.a_nn[len(self.a_nn)-1])
-			print(output)
-			print('\n')
+		for batch in self.batchs[:20]:
+			self.input = [np.reshape(i, (4,1)) for i in batch[['sepal_length',
+																'sepal_width',
+																'petal_length',
+																'petal_width']].values]
+			self.input = self.input / self.max_for_normalize
 
-	def save_model(self):		
+			self.output = [self.vectorized(o) for o in batch['species'].values]
+
+
+
+			for idx,input in enumerate(self.input):
+				output = self.output[idx]
+				self.feed_forward(input)
+				print(self.a_nn[len(self.a_nn)-1])
+				print(output)
+				print('\n')
+
+
+	def save_model(self):
 		np.save('weight', self.weights)
 		np.save('bias', self.biases)
+
 
 	def load_model(self):
 		self.weights = np.load('weight.npy')
@@ -434,7 +454,7 @@ class NeuralNetwork():
 network = [4,100,3]
 learning_rate = 0.3
 epoch = 1000
-batch_size = 5
+batch_size = 2
 load_model = False
 
 
@@ -450,5 +470,5 @@ nn = NeuralNetwork( network,
 # nn.update_weight_bias()
 # nn.error()
 
-# nn.train(log=False)
+nn.train(log=False)
 # nn.save_model()
