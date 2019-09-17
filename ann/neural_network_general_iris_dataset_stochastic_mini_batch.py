@@ -2,26 +2,37 @@
 	Use the most simple form of neuron network
 
 	- multiple data samples
+	
 	- neuron
 		- weight
 		- bias
 		- activation function
+	
 	- feed forward
+	
 	- mean square error
 		- plot 3d for error
 		- https://towardsdatascience.com/an-easy-introduction-to-3d-plotting-with-matplotlib-801561999725
+	
 	- train
+	
 	- learning rate
 		- too big with value 1
 		- too small with value 0.01
 		- normal learning rate at 0.1
+	
 	- batch size
+	
 	- epoch
+	
 	- layer
 		- weight from one layer to other layer
 		- bias on one layer
+	
 	- multiple output
+	
 	- back propagation error
+	
 	- minimum neural network
 
 	- convert all of this to general network
@@ -33,6 +44,8 @@
 		- epoch
 
 	- stochastic gradient descent
+
+	- use mini batch
 '''
 
 
