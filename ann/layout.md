@@ -1,33 +1,6 @@
-
-- network with one neuron
-	- one data point with weight
-	- mean square error
-	- what meaning of traing the network
-	- gradient descent
-	- learning rate
-	- multiple data point
-	- batch size
-	- epoch
-	- weight , bias, activation function
-	- gradient descent with multiple variable function
-	
-- network with one layer
-
-
-- network with multiple layer
-
-
-- iris dataset
-	- input layer
-	- output layer
-
-
-- mnis dataset
-	- input layer
-	- output layer
-=======
------------------------------
+----------------------------
 - neuron
+	- full neuron introduction
 	- weight
 		- model mean value of weight
 		- train
@@ -37,10 +10,10 @@
 
 	- weight and bias
 
-	- weight, bias and sigmoid
+	- weight, bias and activation function
 		- normalize input data
 
-	- weight, bias, sigmoid and multiple inputs
+	- weight, bias, activation function and multiple inputs
 		- batch
 
 - neural network
