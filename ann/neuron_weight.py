@@ -19,6 +19,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 class Neuron(object):
 	def __init__(self, 
 				input,
@@ -56,14 +57,13 @@ class Neuron(object):
 
 			self.feed_forward()
 
+			# update weight
 			self.w = self.w - self.learning_rate*self.error_derivative_respect_to_weight(self.w)
 
-			print('error at epoch {0}'.format(n), self.mean_square_error())
-
-			self.errors.append(self.mean_square_error())
-			
-			print('updated weight {0}'.format(self.w))
-
+			# calculate error after update weight
+			error = self.mean_square_error()
+			self.errors.append(error)
+			print('error at epoch {0}'.format(n), error)
 			print('\n')
 
 		self.plot_train_error()
@@ -76,6 +76,9 @@ class Neuron(object):
 
 
 # ---------------------------------
+# ---------------------------------
+# ---------------------------------
+
 input = [1]
 target = [2]
 learning_rate = 0.1
@@ -87,6 +90,9 @@ n = Neuron(	input,
 			epoch )
 
 n.train()
+
+# ---------------------------------
+# ---------------------------------
 # ---------------------------------
 
 

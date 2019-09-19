@@ -1,11 +1,12 @@
 ----------------------------
 - neuron
 	- full neuron introduction
+
 	- weight
-		- model mean value of weight
-		- train
+		- feed forward
 		- loss function
 		- gradient descent
+		- train
 		- epoch
 
 	- weight and bias
