@@ -22,7 +22,7 @@ class Neuron(object):
 		self.output = self.input*self.w
 
 	def error(self):
-		# using mean square error
+		# using mean square error formula
 		return np.square( self.output - self.target)/2
 	
 	def error_derivative_respect_to_weight(self):

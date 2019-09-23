@@ -1,28 +1,22 @@
 '''
-	Use the most simple form of neuron network
+	- define network structure with a list
+		- number of layer
+		- number of each neural in each layer
 
-	- multiple data samples
-	- neuron
-		- weight
-		- bias
-		- activation function
+	- init weight and bias with matrix shape
+
 	- feed forward
-	- mean square error
-		- plot 3d for error
-		- https://towardsdatascience.com/an-easy-introduction-to-3d-plotting-with-matplotlib-801561999725
-	- train
-	- learning rate
-		- too big with value 1
-		- too small with value 0.01
-		- normal learning rate at 0.1
-	- batch size
-	- epoch
-	- layer
-		- weight from one layer to other layer
-		- bias on one layer
-	- multiple output
-	- back propagation error
-	- minimum neural network
+		- calculate z
+		- calculate a
+		- to final layer
+
+	- back propagation
+		- theory on calculate derivative output layer
+		- theory on calculate derivative hiden layer
+		- theory on calculate delta output layer
+		- theory on calculate delta hiden layer
+		- code calculate delta output
+		- code calculate delta hiden layer
 '''
 
 import numpy as np

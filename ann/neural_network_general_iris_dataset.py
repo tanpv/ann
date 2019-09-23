@@ -26,7 +26,7 @@
 
 	- convert all of this to general network
 
-	- findout the best hyper parameter
+	- findout the best hyper parameter algorithm ?
 		- structure
 		- number of neuron on each layer
 		- learning rate
