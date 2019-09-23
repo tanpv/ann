@@ -3,19 +3,25 @@
 	- full neuron introduction
 
 	- weight
+		- init weight
 		- feed forward
-		- loss function
-		- gradient descent
-		- train
+		- error / loss function
+		- gradient descent (theory)
+		- training process		
 		- epoch
+		- monitor training process
+		- print out error after each epoch
+		- plot error after each epoch
 
 	- weight and bias
+		- update both weight and bias
 
 	- weight, bias and activation function
 		- normalize input data
 
 	- weight, bias, activation function and multiple inputs
 		- batch
+
 
 - neural network
 	- define 222 structure
@@ -51,7 +57,7 @@ road map
 		- rnn
 		- qnn
 
-	tools
+	tool and framework
 		- keras
 		- tensorflow 2.0
 		- pytorch 1.0
