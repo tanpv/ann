@@ -1,4 +1,5 @@
 '''
+
 	- define network structure with a list
 		- number of layer
 		- number of each neural in each layer
@@ -17,6 +18,7 @@
 		- theory on calculate delta hiden layer
 		- code calculate delta output
 		- code calculate delta hiden layer
+
 '''
 
 import numpy as np

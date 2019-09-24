@@ -1,7 +1,7 @@
 ----------------------------
 - neuron
-	- full neuron introduction
-
+	- neuron introduction
+	
 	- weight
 		- init weight
 		- feed forward

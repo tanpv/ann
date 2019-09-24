@@ -58,7 +58,7 @@ class Neuron(object):
 input = [1]
 target = [2]
 learning_rate = 0.1
-epoch = 100
+epoch = 50
 
 n = Neuron(	input,
 			target,
